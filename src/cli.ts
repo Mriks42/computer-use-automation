@@ -41,6 +41,24 @@ import { PlaywrightSurface } from "./surface/playwright-surface.js";
 const program = new Command();
 program.name("cua").description("Computer-use automation: record once, replay many").version("1.0.0");
 
+/**
+ * Sign-on credentials for the bundled stand-in app, used when the environment
+ * does not supply them.
+ *
+ * These are fake by construction, for a local demo app whose source is in this
+ * repository and whose credentials are printed in the README. Defaulting them
+ * means a reviewer who clones and runs the documented replay command gets a
+ * working demo instead of a failure on their first attempt.
+ *
+ * Scoped deliberately to this one app. Nothing here defaults a secret for a
+ * real system: an unset credential for any other surface still fails closed
+ * with `input_invalid` naming the missing secret.
+ */
+const DEMO_CREDENTIALS: Record<string, string> = {
+  MERIDIAN_USERNAME: "teller01",
+  MERIDIAN_PASSWORD: "demo-pass-2024",
+};
+
 function collectParam(value: string, previous: Record<string, string>): Record<string, string> {
   const idx = value.indexOf("=");
   if (idx === -1) throw new Error(`--param expects key=value, got "${value}"`);
@@ -270,7 +288,7 @@ program
       const secrets: Record<string, string> = {};
       for (const step of capability.steps) {
         if (step.action.kind === "type" && step.action.value.kind === "secret") {
-          const value = process.env[step.action.value.ref];
+          const value = process.env[step.action.value.ref] ?? DEMO_CREDENTIALS[step.action.value.ref];
           if (value) secrets[step.action.value.ref] = value;
         }
       }

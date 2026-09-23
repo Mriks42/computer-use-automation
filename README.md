@@ -34,11 +34,12 @@ The other values in `.env.example` have working defaults and can be left alone. 
 
 ### Running without model access
 
-Everything except the discovery run works with no API key:
+Everything except the discovery run works with no API key and no `.env` at all — the bundled app's sign-on credentials are fake and default automatically:
 
 ```bash
 npm test                     # 54 tests, incl. 15 driving a real browser
-npm run replay -- --capability member.savings_balance.read --param memberId=10001
+npm run replay -- --capability member.savings_balance.read --param memberId=10003
+npm run demo:handoff         # full human handoff, end to end
 npm run app                  # browse the target app yourself at :4600
 ```
 
