@@ -1,0 +1,35 @@
+{
+  "name": "computer-use-automation",
+  "version": "1.0.0",
+  "description": "Record-once / replay-many computer-use automation for legacy back-office applications",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "app": "tsx src/cli.ts app",
+    "discover": "tsx src/cli.ts discover",
+    "replay": "tsx src/cli.ts replay",
+    "operator": "tsx src/cli.ts operator",
+    "capabilities": "tsx src/cli.ts capabilities",
+    "catalog": "tsx src/cli.ts catalog",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "openai": "^4.73.0",
+    "playwright": "^1.49.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

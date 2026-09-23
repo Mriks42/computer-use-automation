@@ -1,0 +1,20 @@
+{
+  "capabilityId": "member.savings_balance.read",
+  "name": "Read member savings balance",
+  "description": "Signs on to Meridian Core, looks up a member by member number, and returns the current balance of their savings share account. Read-only: navigates and reads, commits nothing.",
+  "goal": "Sign on to the application, search for the member with member number 10001, open that member's record, and read the current balance of their Savings account.",
+  "product": "meridian-core",
+  "tenantId": "riverside-cu",
+  "params": {
+    "memberId": {
+      "value": "10001",
+      "type": "string",
+      "description": "The member number to look up.",
+      "sensitivity": "pii",
+      "pattern": "^[0-9]{5}$"
+    }
+  },
+  "secrets": ["MERIDIAN_USERNAME", "MERIDIAN_PASSWORD"],
+  "expectedOutputs": ["savingsBalance"],
+  "maxSteps": 18
+}

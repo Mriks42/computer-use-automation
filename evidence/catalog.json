@@ -1,0 +1,49 @@
+[
+  {
+    "name": "member.savings_balance.read",
+    "version": "1.0.0",
+    "description": "Signs on to Meridian Core, looks up a member by member number, and returns the current balance of their savings share account. Read-only: navigates and reads, commits nothing.",
+    "risk": "reversible_write",
+    "approval": "draft",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "memberId": {
+          "type": "string",
+          "description": "The member number to look up."
+        }
+      },
+      "required": [
+        "memberId"
+      ]
+    },
+    "returns": {
+      "savingsBalance": {
+        "type": "currency",
+        "description": "The current balance of the member's Savings account."
+      }
+    },
+    "outcomes": [
+      {
+        "code": "MEMBER_NOT_FOUND",
+        "description": "The member with the specified ID does not exist.",
+        "verified": false
+      },
+      {
+        "code": "ACCESS_DENIED",
+        "description": "The user does not have permission to view the member's details.",
+        "verified": false
+      },
+      {
+        "code": "PERMISSION_DENIED",
+        "description": "The signed-on operator is not authorized to view this record. A legitimate answer to the caller's question, not a malfunction — the record exists and access was refused.",
+        "verified": true
+      },
+      {
+        "code": "RECORD_NOT_FOUND",
+        "description": "No record matched the identifier supplied. The caller asked about something that does not exist; this is information, not an error.",
+        "verified": true
+      }
+    ]
+  }
+]

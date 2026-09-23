@@ -1,0 +1,5 @@
+{"seq":0,"at":"2026-09-23T03:16:21.887Z","type":"run_started","kind":"replay","runId":"replay-2026-09-23T03-16-21-886Z-51c2ec49"}
+{"seq":1,"at":"2026-09-23T03:16:21.966Z","type":"replay_started","capability":"member.savings_balance.read","version":"1.0.0","mode":"attended","params":{"memberId":"<redacted:memberId>"}}
+{"seq":2,"at":"2026-09-23T03:16:27.345Z","type":"capture_written","label":"outcome-RECORD_NOT_FOUND","screenshot":"captures/00-outcome-RECORD_NOT_FOUND.png","raw":"captures/00-outcome-RECORD_NOT_FOUND.html"}
+{"seq":3,"at":"2026-09-23T03:16:27.345Z","type":"business_outcome","code":"RECORD_NOT_FOUND","stepId":"s6_to_search_for_the_member_with_id"}
+{"seq":4,"at":"2026-09-23T03:16:27.345Z","type":"document_written","name":"result.json"}

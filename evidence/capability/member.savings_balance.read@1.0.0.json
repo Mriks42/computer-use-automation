@@ -1,0 +1,456 @@
+{
+  "schemaVersion": "1.0",
+  "id": "member.savings_balance.read",
+  "version": "1.0.0",
+  "name": "Read member savings balance",
+  "description": "Signs on to Meridian Core, looks up a member by member number, and returns the current balance of their savings share account. Read-only: navigates and reads, commits nothing.",
+  "surface": {
+    "kind": "web",
+    "app": "meridian-core",
+    "entryPoint": "http://127.0.0.1:4600"
+  },
+  "tenant": {
+    "product": "meridian-core",
+    "recordedOnTenant": "riverside-cu",
+    "verifiedTenants": [
+      "riverside-cu"
+    ],
+    "overrides": {}
+  },
+  "inputs": [
+    {
+      "name": "memberId",
+      "type": "string",
+      "required": true,
+      "description": "The member number to look up.",
+      "sensitivity": "pii",
+      "pattern": "^[0-9]{5}$"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "savingsBalance",
+      "type": "currency",
+      "description": "The current balance of the member's Savings account.",
+      "required": true,
+      "sensitivity": "internal"
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1_to_enter_the_operator_id_for_sig",
+      "intent": "To enter the operator ID for sign on.",
+      "action": {
+        "kind": "type",
+        "target": {
+          "description": "textbox \"Operator ID:\" in Meridian Core Banking — Operator Sign On",
+          "frame": "main",
+          "strategies": [
+            {
+              "kind": "row_anchored",
+              "anchorText": "Operator ID:",
+              "targetRole": "textbox",
+              "columnIndex": 1
+            },
+            {
+              "kind": "label_adjacent",
+              "labelText": "Operator ID:",
+              "targetRole": "textbox",
+              "exact": false
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "textbox",
+              "index": 0,
+              "frame": "main"
+            }
+          ],
+          "confidence": "medium",
+          "rationale": "row is located by its leading cell; field has no accessible name; identified by the visible text beside it; positional fallback within the frame"
+        },
+        "value": {
+          "kind": "secret",
+          "ref": "MERIDIAN_USERNAME"
+        },
+        "clearFirst": true
+      },
+      "recovery": [],
+      "riskClass": "reversible_write",
+      "timeoutMs": 15000
+    },
+    {
+      "id": "s2_to_enter_the_password_for_sign_o",
+      "intent": "To enter the password for sign on.",
+      "action": {
+        "kind": "type",
+        "target": {
+          "description": "textbox \"Password:\" in Meridian Core Banking — Operator Sign On",
+          "frame": "main",
+          "strategies": [
+            {
+              "kind": "row_anchored",
+              "anchorText": "Password:",
+              "targetRole": "textbox",
+              "columnIndex": 1
+            },
+            {
+              "kind": "label_adjacent",
+              "labelText": "Password:",
+              "targetRole": "textbox",
+              "exact": false
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "textbox",
+              "index": 1,
+              "frame": "main"
+            }
+          ],
+          "confidence": "medium",
+          "rationale": "row is located by its leading cell; field has no accessible name; identified by the visible text beside it; positional fallback within the frame"
+        },
+        "value": {
+          "kind": "secret",
+          "ref": "MERIDIAN_PASSWORD"
+        },
+        "clearFirst": true
+      },
+      "recovery": [],
+      "riskClass": "reversible_write",
+      "timeoutMs": 15000
+    },
+    {
+      "id": "s3_to_sign_on_to_the_meridian_core_",
+      "intent": "To sign on to the Meridian Core Banking system.",
+      "action": {
+        "kind": "click",
+        "target": {
+          "description": "button \"Sign On\" in Meridian Core Banking — Operator Sign On",
+          "frame": "main",
+          "strategies": [
+            {
+              "kind": "role_name",
+              "role": "button",
+              "name": "Sign On",
+              "exact": true
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "button",
+              "index": 0,
+              "frame": "main"
+            }
+          ],
+          "confidence": "high",
+          "rationale": "accessible name is unique for this role on the screen; positional fallback within the frame"
+        }
+      },
+      "checkpoint": {
+        "kind": "text_present",
+        "text": "Select a function from the navigation panel."
+      },
+      "recovery": [],
+      "riskClass": "reversible_write",
+      "timeoutMs": 15000
+    },
+    {
+      "id": "s4_to_navigate_to_the_member_search",
+      "intent": "To navigate to the Member Search page.",
+      "action": {
+        "kind": "click",
+        "target": {
+          "description": "link \"Member Search\" in MERIDIAN",
+          "frame": "navframe",
+          "strategies": [
+            {
+              "kind": "role_name",
+              "role": "link",
+              "name": "Member Search",
+              "exact": true
+            },
+            {
+              "kind": "row_anchored",
+              "anchorText": "Member Search",
+              "targetRole": "link",
+              "columnIndex": 0
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "link",
+              "index": 1,
+              "frame": "navframe"
+            }
+          ],
+          "confidence": "high",
+          "rationale": "accessible name is unique for this role on the screen; row is located by its leading cell; positional fallback within the frame"
+        }
+      },
+      "precondition": {
+        "kind": "text_present",
+        "text": "Select a function from the navigation panel."
+      },
+      "checkpoint": {
+        "kind": "text_present",
+        "text": "Member ID or Last Name:"
+      },
+      "recovery": [],
+      "riskClass": "read_only",
+      "timeoutMs": 15000
+    },
+    {
+      "id": "s5_to_enter_the_member_id_for_searc",
+      "intent": "To enter the member ID for searching the member.",
+      "action": {
+        "kind": "type",
+        "target": {
+          "description": "textbox \"Member ID or Last Name:\" in Member Search",
+          "frame": "mainframe",
+          "strategies": [
+            {
+              "kind": "row_anchored",
+              "anchorText": "Member ID or Last Name:",
+              "targetRole": "textbox",
+              "columnIndex": 1
+            },
+            {
+              "kind": "label_adjacent",
+              "labelText": "Member ID or Last Name:",
+              "targetRole": "textbox",
+              "exact": false
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "textbox",
+              "index": 0,
+              "frame": "mainframe"
+            }
+          ],
+          "confidence": "medium",
+          "rationale": "row is located by its leading cell; field has no accessible name; identified by the visible text beside it; positional fallback within the frame"
+        },
+        "value": {
+          "kind": "param",
+          "param": "memberId"
+        },
+        "clearFirst": true
+      },
+      "precondition": {
+        "kind": "text_present",
+        "text": "Member ID or Last Name:"
+      },
+      "recovery": [],
+      "riskClass": "reversible_write",
+      "timeoutMs": 15000
+    },
+    {
+      "id": "s6_to_search_for_the_member_with_id",
+      "intent": "To search for the member with ID 10001.",
+      "action": {
+        "kind": "click",
+        "target": {
+          "description": "button \"Search\" in Member Search",
+          "frame": "mainframe",
+          "strategies": [
+            {
+              "kind": "role_name",
+              "role": "button",
+              "name": "Search",
+              "exact": true
+            },
+            {
+              "kind": "row_anchored",
+              "anchorText": "Member ID or Last Name:",
+              "targetRole": "button",
+              "columnIndex": 2
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "button",
+              "index": 0,
+              "frame": "mainframe"
+            }
+          ],
+          "confidence": "high",
+          "rationale": "accessible name is unique for this role on the screen; row is located by its leading cell; positional fallback within the frame"
+        }
+      },
+      "checkpoint": {
+        "kind": "text_present",
+        "text": "1 record(s) matched \"{memberId}\"."
+      },
+      "recovery": [],
+      "riskClass": "read_only",
+      "timeoutMs": 15000
+    },
+    {
+      "id": "s7_to_open_the_member_record_for_me",
+      "intent": "To open the member record for member number 10001.",
+      "action": {
+        "kind": "click",
+        "target": {
+          "description": "link \"10001\" in Member Search Results",
+          "frame": "mainframe",
+          "strategies": [
+            {
+              "kind": "row_anchored",
+              "anchorText": "10001",
+              "anchorParam": "memberId",
+              "targetRole": "link",
+              "columnIndex": 0
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "link",
+              "index": 0,
+              "frame": "mainframe"
+            }
+          ],
+          "confidence": "medium",
+          "rationale": "skipped name-based targeting: this element's label is a parameter value and would pin the step to one input; row is located by the memberId parameter, so the step follows the caller's input; positional fallback within the frame"
+        }
+      },
+      "precondition": {
+        "kind": "text_present",
+        "text": "1 record(s) matched \"{memberId}\"."
+      },
+      "checkpoint": {
+        "kind": "text_present",
+        "text": "Member Detail — {memberId}"
+      },
+      "recovery": [],
+      "riskClass": "read_only",
+      "timeoutMs": 15000
+    },
+    {
+      "id": "s8_to_record_the_current_balance_of",
+      "intent": "To record the current balance of the member's Savings account.",
+      "action": {
+        "kind": "extract",
+        "output": "savingsBalance",
+        "target": {
+          "description": "cell \"$8,241.55\" in Share Accounts",
+          "frame": "mainframe",
+          "strategies": [
+            {
+              "kind": "row_anchored",
+              "anchorText": "Savings",
+              "targetRole": "cell",
+              "columnIndex": 2
+            },
+            {
+              "kind": "nth_of_role",
+              "role": "cell",
+              "index": 14,
+              "frame": "mainframe"
+            }
+          ],
+          "confidence": "medium",
+          "rationale": "skipped name-based targeting: this cell's text is the value being extracted; row is located by its leading cell; positional fallback within the frame"
+        }
+      },
+      "precondition": {
+        "kind": "text_present",
+        "text": "Member Detail — {memberId}"
+      },
+      "recovery": [],
+      "riskClass": "read_only",
+      "timeoutMs": 15000
+    }
+  ],
+  "successCondition": {
+    "kind": "text_present",
+    "text": "Member Detail — {memberId}"
+  },
+  "knownOutcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "The member with the specified ID does not exist.",
+      "detect": {
+        "kind": "text_present",
+        "text": "0 record(s) matched"
+      },
+      "message": "The member with ID 10001 was not found.",
+      "partialOutputs": [],
+      "verified": false
+    },
+    {
+      "code": "ACCESS_DENIED",
+      "description": "The user does not have permission to view the member's details.",
+      "detect": {
+        "kind": "text_present",
+        "text": "Access Denied"
+      },
+      "message": "You do not have permission to view this member's details.",
+      "partialOutputs": [],
+      "verified": false
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "description": "The signed-on operator is not authorized to view this record. A legitimate answer to the caller's question, not a malfunction — the record exists and access was refused.",
+      "detect": {
+        "kind": "text_present",
+        "text": "You do not have permission to view"
+      },
+      "message": "Access to this record is restricted for the current operator role.",
+      "partialOutputs": [],
+      "verified": true
+    },
+    {
+      "code": "RECORD_NOT_FOUND",
+      "description": "No record matched the identifier supplied. The caller asked about something that does not exist; this is information, not an error.",
+      "detect": {
+        "kind": "text_present",
+        "text": "No member found matching"
+      },
+      "message": "No record matched the supplied identifier.",
+      "partialOutputs": [],
+      "verified": true
+    }
+  ],
+  "globalRecovery": [
+    {
+      "name": "dismiss_system_notice",
+      "description": "Meridian injects an unscheduled maintenance notice between screens. It is modal, carries no business meaning, and must be acknowledged before the underlying page is reachable.",
+      "when": {
+        "kind": "text_present",
+        "text": "System Notice"
+      },
+      "do": [
+        {
+          "kind": "click",
+          "target": {
+            "description": "Acknowledge button on the system notice interstitial",
+            "frame": "main",
+            "strategies": [
+              {
+                "kind": "role_name",
+                "role": "button",
+                "name": "Acknowledge",
+                "exact": true
+              }
+            ],
+            "confidence": "high",
+            "rationale": "The interstitial has exactly one control and it is labelled."
+          }
+        }
+      ],
+      "maxAttempts": 2
+    }
+  ],
+  "riskClass": "reversible_write",
+  "provenance": {
+    "recordedAt": "2026-09-23T03:16:13.677Z",
+    "recordedBy": "openai:gpt-4o",
+    "discoveryRunId": "discovery-2026-09-23T03-15-48-735Z-9980b186",
+    "humanEdited": false
+  },
+  "approval": {
+    "state": "draft"
+  },
+  "stability": {
+    "attempts": 4,
+    "successes": 2,
+    "lastReplayAt": "2026-09-23T03:16:41.810Z",
+    "degradedResolutions": 0
+  }
+}

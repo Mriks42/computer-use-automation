@@ -1,0 +1,6 @@
+{"seq":0,"at":"2026-09-23T03:16:27.749Z","type":"run_started","kind":"replay","runId":"replay-2026-09-23T03-16-27-749Z-f153edf7"}
+{"seq":1,"at":"2026-09-23T03:16:27.838Z","type":"replay_started","capability":"member.savings_balance.read","version":"1.0.0","mode":"attended","params":{"memberId":"<redacted:memberId>"}}
+{"seq":2,"at":"2026-09-23T03:16:31.400Z","type":"recovery_applied","rule":"dismiss_system_notice","stepId":"s4_to_navigate_to_the_member_search","phase":"post"}
+{"seq":3,"at":"2026-09-23T03:16:35.947Z","type":"capture_written","label":"replay-success","screenshot":"captures/00-replay-success.png","raw":"captures/00-replay-success.html"}
+{"seq":4,"at":"2026-09-23T03:16:35.947Z","type":"replay_succeeded","outputs":{"savingsBalance":8241.55},"degradedResolutions":0}
+{"seq":5,"at":"2026-09-23T03:16:35.948Z","type":"document_written","name":"result.json"}

@@ -1,0 +1,59 @@
+<!-- ===== frame: main (http://127.0.0.1:4600/desk) ===== -->
+<!DOCTYPE html><html><head><title>Meridian Core - Operator Desk</title></head>
+<frameset cols="180,*" border="2">
+  <frame name="navframe" src="/nav">
+  <frame name="mainframe" src="/main">
+</frameset>
+</html>
+
+<!-- ===== frame: navframe (http://127.0.0.1:4600/nav) ===== -->
+<!DOCTYPE html><html><head><title>Navigation</title><style>
+  body { font-family: Verdana, Geneva, sans-serif; font-size: 12px; background: #dfe3e8; margin: 0; padding: 0; }
+  table { border-collapse: collapse; }
+  .panel { background: #ffffff; border: 2px solid #8a9199; margin: 8px; }
+  .panel-title { background: #1f3d63; color: #ffffff; font-weight: bold; padding: 4px 8px; font-size: 12px; }
+  .grid td { border: 1px solid #b8bfc7; padding: 3px 7px; }
+  .grid th { border: 1px solid #b8bfc7; padding: 3px 7px; background: #c6cdd4; text-align: left; }
+  .formtable td { padding: 4px 6px; }
+  .err { background: #ffe8e8; border: 2px solid #a11; color: #7a0000; padding: 8px; margin: 8px; font-weight: bold; }
+  .warn { background: #fff8d8; border: 2px solid #c9a227; padding: 8px; margin: 8px; }
+  .ok { background: #e8f6e8; border: 2px solid #2a7a2a; padding: 8px; margin: 8px; font-weight: bold; }
+  input[type=text], input[type=password], select { border: 1px solid #7a828a; font-family: Verdana; font-size: 12px; padding: 2px; }
+  input[type=submit], button { font-family: Verdana; font-size: 12px; padding: 2px 10px; }
+</style></head>
+<body>
+
+<div style="background:#1f3d63; color:#fff; padding:6px; font-weight:bold;">MERIDIAN</div>
+<table style="width:100%; margin-top:6px;">
+  <tbody><tr><td><a href="/main" target="mainframe" data-cua-ref="navframe#0">Home</a></td></tr>
+  <tr><td><a href="/search" target="mainframe" data-cua-ref="navframe#1">Member Search</a></td></tr>
+  <tr><td><a href="/reports" target="mainframe" data-cua-ref="navframe#2">Reports</a></td></tr>
+  <tr><td><a href="/logout" target="_top" data-cua-ref="navframe#3">Sign Off</a></td></tr>
+</tbody></table>
+
+</body></html>
+
+<!-- ===== frame: mainframe (http://127.0.0.1:4600/search/results?q=99999) ===== -->
+<!DOCTYPE html><html><head><title>Member Search - No Results</title><style>
+  body { font-family: Verdana, Geneva, sans-serif; font-size: 12px; background: #dfe3e8; margin: 0; padding: 0; }
+  table { border-collapse: collapse; }
+  .panel { background: #ffffff; border: 2px solid #8a9199; margin: 8px; }
+  .panel-title { background: #1f3d63; color: #ffffff; font-weight: bold; padding: 4px 8px; font-size: 12px; }
+  .grid td { border: 1px solid #b8bfc7; padding: 3px 7px; }
+  .grid th { border: 1px solid #b8bfc7; padding: 3px 7px; background: #c6cdd4; text-align: left; }
+  .formtable td { padding: 4px 6px; }
+  .err { background: #ffe8e8; border: 2px solid #a11; color: #7a0000; padding: 8px; margin: 8px; font-weight: bold; }
+  .warn { background: #fff8d8; border: 2px solid #c9a227; padding: 8px; margin: 8px; }
+  .ok { background: #e8f6e8; border: 2px solid #2a7a2a; padding: 8px; margin: 8px; font-weight: bold; }
+  input[type=text], input[type=password], select { border: 1px solid #7a828a; font-family: Verdana; font-size: 12px; padding: 2px; }
+  input[type=submit], button { font-family: Verdana; font-size: 12px; padding: 2px 10px; }
+</style></head>
+<body>
+
+<div class="panel">
+  <div class="panel-title">Member Search Results</div>
+  <div class="warn">No member found matching "99999". Verify the member number and try again.</div>
+  <div style="padding:10px;"><a href="/search" data-cua-ref="mainframe#0">Return to search</a></div>
+</div>
+
+</body></html>

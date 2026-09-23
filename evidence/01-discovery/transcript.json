@@ -1,0 +1,108 @@
+{
+  "status": "succeeded",
+  "goal": "Sign on to the application, search for the member with member number 10001, open that member's record, and read the current balance of their Savings account.",
+  "model": "openai:gpt-4o",
+  "completion": {
+    "summary": "Successfully retrieved the current balance of the member's Savings account.",
+    "successEvidence": "Member Detail — 10001",
+    "knownOutcomes": [
+      {
+        "code": "MEMBER_NOT_FOUND",
+        "description": "The member with the specified ID does not exist.",
+        "detectText": "0 record(s) matched",
+        "message": "The member with ID 10001 was not found."
+      },
+      {
+        "code": "ACCESS_DENIED",
+        "description": "The user does not have permission to view the member's details.",
+        "detectText": "Access Denied",
+        "message": "You do not have permission to view this member's details."
+      }
+    ]
+  },
+  "entries": [
+    {
+      "index": 0,
+      "tool": "type_secret",
+      "why": "To enter the operator ID for sign on.",
+      "target": {
+        "role": "textbox",
+        "name": "",
+        "derivedName": "Operator ID:"
+      },
+      "ok": true
+    },
+    {
+      "index": 1,
+      "tool": "type_secret",
+      "why": "To enter the password for sign on.",
+      "target": {
+        "role": "textbox",
+        "name": "",
+        "derivedName": "Password:"
+      },
+      "ok": true
+    },
+    {
+      "index": 2,
+      "tool": "click",
+      "why": "To sign on to the Meridian Core Banking system.",
+      "target": {
+        "role": "button",
+        "name": "Sign On"
+      },
+      "ok": true
+    },
+    {
+      "index": 3,
+      "tool": "click",
+      "why": "To navigate to the Member Search page.",
+      "target": {
+        "role": "link",
+        "name": "Member Search"
+      },
+      "ok": true
+    },
+    {
+      "index": 4,
+      "tool": "type",
+      "why": "To enter the member ID for searching the member.",
+      "target": {
+        "role": "textbox",
+        "name": "",
+        "derivedName": "Member ID or Last Name:"
+      },
+      "ok": true
+    },
+    {
+      "index": 5,
+      "tool": "click",
+      "why": "To search for the member with ID 10001.",
+      "target": {
+        "role": "button",
+        "name": "Search"
+      },
+      "ok": true
+    },
+    {
+      "index": 6,
+      "tool": "click",
+      "why": "To open the member record for member number 10001.",
+      "target": {
+        "role": "link",
+        "name": "10001"
+      },
+      "ok": true
+    },
+    {
+      "index": 7,
+      "tool": "extract",
+      "why": "To record the current balance of the member's Savings account.",
+      "target": {
+        "role": "cell",
+        "name": "$8,241.55"
+      },
+      "ok": true
+    }
+  ]
+}

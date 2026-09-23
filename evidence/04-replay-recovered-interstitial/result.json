@@ -1,0 +1,90 @@
+{
+  "runId": "replay-2026-09-23T03-16-27-749Z-f153edf7",
+  "capabilityId": "member.savings_balance.read",
+  "capabilityVersion": "1.0.0",
+  "startedAt": "2026-09-23T03:16:27.838Z",
+  "durationMs": 8109,
+  "trace": [
+    {
+      "stepId": "s1_to_enter_the_operator_id_for_sig",
+      "index": 0,
+      "intent": "To enter the operator ID for sign on.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "textbox in row anchored by \"Operator ID:\" at column 1",
+      "durationMs": 525
+    },
+    {
+      "stepId": "s2_to_enter_the_password_for_sign_o",
+      "index": 1,
+      "intent": "To enter the password for sign on.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "textbox in row anchored by \"Password:\" at column 1",
+      "durationMs": 522
+    },
+    {
+      "stepId": "s3_to_sign_on_to_the_meridian_core_",
+      "index": 2,
+      "intent": "To sign on to the Meridian Core Banking system.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "button named \"Sign On\"",
+      "durationMs": 1185
+    },
+    {
+      "stepId": "s4_to_navigate_to_the_member_search",
+      "index": 3,
+      "intent": "To navigate to the Member Search page.",
+      "status": "recovered",
+      "resolvedRung": 0,
+      "resolvedBy": "link named \"Member Search\"",
+      "recoveriesApplied": [
+        "dismiss_system_notice"
+      ],
+      "durationMs": 1965
+    },
+    {
+      "stepId": "s5_to_enter_the_member_id_for_searc",
+      "index": 4,
+      "intent": "To enter the member ID for searching the member.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "textbox in row anchored by \"Member ID or Last Name:\" at column 1",
+      "durationMs": 513
+    },
+    {
+      "stepId": "s6_to_search_for_the_member_with_id",
+      "index": 5,
+      "intent": "To search for the member with ID 10001.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "button named \"Search\"",
+      "durationMs": 1158
+    },
+    {
+      "stepId": "s7_to_open_the_member_record_for_me",
+      "index": 6,
+      "intent": "To open the member record for member number 10001.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "link in row anchored by \"{memberId}\" at column 0",
+      "durationMs": 1179
+    },
+    {
+      "stepId": "s8_to_record_the_current_balance_of",
+      "index": 7,
+      "intent": "To record the current balance of the member's Savings account.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "cell in row anchored by \"Savings\" at column 2",
+      "durationMs": 521
+    }
+  ],
+  "evidenceDir": "/Users/mrigankochowdhury/Projects/computer-use-automation/runs/replay-2026-09-23T03-16-27-749Z-f153edf7",
+  "degradedResolutions": 0,
+  "status": "success",
+  "outputs": {
+    "savingsBalance": 8241.55
+  }
+}
