@@ -246,7 +246,7 @@ program
   .command("replay")
   .description("Replay a recorded capability deterministically, with no model involved")
   .requiredOption("--capability <id>", "capability id")
-  .option("--version <semver>", "specific version (defaults to the newest)")
+  .option("--artifact-version <semver>", "specific version (defaults to the newest)")
   .option("--param <key=value>", "input parameter, repeatable", collectParam, {})
   .option("--mode <mode>", "attended or unattended", "attended")
   .option("--inject <fault>", "inject a runtime fault before replaying")
@@ -255,9 +255,9 @@ program
   .option("--target <origin>", "use an existing target instead of starting the local app")
   .action(async (opts) => {
     const store = new CapabilityStore(PATHS.capabilities);
-    const capability = store.get(opts.capability, opts.version);
+    const capability = store.get(opts.capability, opts.artifactVersion);
     if (!capability) {
-      process.stderr.write(`no capability "${opts.capability}"${opts.version ? `@${opts.version}` : ""}\n`);
+      process.stderr.write(`no capability "${opts.capability}"${opts.artifactVersion ? `@${opts.artifactVersion}` : ""}\n`);
       process.exitCode = 1;
       return;
     }
@@ -338,10 +338,10 @@ capabilities
   .command("show")
   .description("Print the agent-facing contract for a capability")
   .requiredOption("--capability <id>")
-  .option("--version <semver>")
+  .option("--artifact-version <semver>")
   .action((opts) => {
     const store = new CapabilityStore(PATHS.capabilities);
-    const capability = store.get(opts.capability, opts.version);
+    const capability = store.get(opts.capability, opts.artifactVersion);
     if (!capability) {
       process.stderr.write("not found\n");
       process.exitCode = 1;
@@ -354,12 +354,12 @@ capabilities
   .command("approve")
   .description("Promote a draft artifact so it can be invoked unattended")
   .requiredOption("--capability <id>")
-  .requiredOption("--version <semver>")
+  .requiredOption("--artifact-version <semver>")
   .requiredOption("--actor <name>", "who is approving")
   .option("--note <text>", "review note", "")
   .action((opts) => {
     const store = new CapabilityStore(PATHS.capabilities);
-    const approved = store.approve(opts.capability, opts.version, opts.actor, opts.note);
+    const approved = store.approve(opts.capability, opts.artifactVersion, opts.actor, opts.note);
     process.stdout.write(`${approved.id}@${approved.version} approved by ${opts.actor}\n`);
   });
 

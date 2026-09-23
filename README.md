@@ -37,7 +37,7 @@ The other values in `.env.example` have working defaults and can be left alone. 
 Everything except the discovery run works with no API key:
 
 ```bash
-npm test                     # 49 tests, incl. 12 driving a real browser
+npm test                     # 51 tests, incl. 12 driving a real browser
 npm run replay -- --capability member.savings_balance.read --param memberId=10001
 npm run app                  # browse the target app yourself at :4600
 ```
@@ -139,7 +139,7 @@ npm run capabilities -- show --capability member.savings_balance.read
 Every recording starts as `draft`. Unattended invocation requires approval, which is a human act:
 
 ```bash
-npm run capabilities -- approve --capability member.savings_balance.read --version 1.0.0 --actor your-name --note "reviewed targeting and outcomes"
+npm run capabilities -- approve --capability member.savings_balance.read --artifact-version 1.0.0 --actor your-name --note "reviewed targeting and outcomes"
 npm run replay -- --capability member.savings_balance.read --param memberId=10001 --mode unattended
 ```
 
@@ -195,4 +195,4 @@ npm test
 npm run typecheck
 ```
 
-37 unit tests over the parts that fail quietly — locator matching, redaction, risk classification, allowlist rules, the control lease. 12 integration tests driving a real Chromium against the real app, covering the claims that only hold against a live surface: deterministic replay, parameterization across different inputs, business outcomes reported as outcomes, interstitial recovery, session-expiry classification, evidence capture, input validation, and the approval gate.
+39 unit tests over the parts that fail quietly — locator matching, redaction, risk classification, allowlist rules, the control lease. 12 integration tests driving a real Chromium against the real app, covering the claims that only hold against a live surface: deterministic replay, parameterization across different inputs, business outcomes reported as outcomes, interstitial recovery, session-expiry classification, evidence capture, input validation, and the approval gate.
