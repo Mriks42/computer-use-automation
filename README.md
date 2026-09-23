@@ -99,13 +99,21 @@ Any run — discovery or replay — starts an operator console at **http://127.0
 
 When the system cannot safely proceed it pauses, raises an intervention carrying the goal, the step, the screenshot and why it stopped, and releases the session lease. The console shows that context with a **Take control** button. The operator then drives **the same browser window the automation was using** — not a fresh session — and hands control back when done.
 
-To see a full handoff end to end — pause, transfer, operator acts, resume, verify:
+**Be the operator yourself.** This pauses the run and waits for you — open the console, take control, drive the browser, hand it back:
 
 ```bash
-npm run demo:handoff -- --headed
+npm run demo:handoff -- --manual
 ```
 
-The operator's side is scripted so it's reproducible from a clone; everything else is real. Committed output is in [evidence/06-escalation-handoff/](evidence/06-escalation-handoff/). To drive it by hand instead, run any replay headed and use the console.
+A Chrome window opens showing the automation mid-flow on the search results. The console at :4610 shows the intervention with its screenshot and a **Take control** button. Click through to member 10001 in that same window, hand control back, and watch the run resume and read the balance from the record you chose.
+
+Or watch it run start to finish with the operator's half scripted:
+
+```bash
+npm run demo:handoff -- --headed     # drop --headed for headless
+```
+
+Either way the mechanism is identical — only who plays the operator changes. Committed output is in [evidence/06-escalation-handoff/](evidence/06-escalation-handoff/).
 
 Control transfer is enforced at the surface: every `act()` checks the lease and throws if automation is not the holder. A stray retry cannot type into a form an operator is mid-way through correcting.
 

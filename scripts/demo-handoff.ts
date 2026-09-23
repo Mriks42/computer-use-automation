@@ -34,7 +34,14 @@ import { GuardedSurface } from "../src/surface/guarded.js";
 import { PlaywrightSurface } from "../src/surface/playwright-surface.js";
 
 const OPERATOR = "operator-jane";
-const headless = !process.argv.includes("--headed");
+/**
+ * `--manual` hands the operator's half to a real person instead of scripting
+ * it: the run pauses, and you take control from the console and drive the
+ * browser yourself. Nothing else changes — it is the same code path, with a
+ * human where the simulated operator would be.
+ */
+const manual = process.argv.includes("--manual");
+const headless = !process.argv.includes("--headed") && !manual;
 
 async function waitForOpenIntervention(store: InterventionStore, timeoutMs = 60_000): Promise<InterventionRequest> {
   const deadline = Date.now() + timeoutMs;
@@ -89,6 +96,41 @@ try {
   } else {
     throw error;
   }
+}
+
+if (manual) {
+  process.stdout.write(
+    `\n  ── YOUR TURN ──────────────────────────────────────────────────────\n` +
+      `  1. Open the operator console:  ${console_.url}\n` +
+      `  2. Enter any operator ID and click "Take control of live session"\n` +
+      `  3. In the Chrome window that is already open, click member 10001\n` +
+      `  4. Back in the console, click "Hand control back"\n\n` +
+      `  Automation is paused and will resume when you hand control back.\n` +
+      `  ───────────────────────────────────────────────────────────────────\n\n`,
+  );
+
+  const resumed = await broker.waitForAutomation(10 * 60_000);
+  if (resumed !== "resumed") {
+    process.stdout.write(`  handoff ended: ${resumed}\n`);
+    await surface.dispose();
+    await console_.close();
+    await app.close();
+    process.exit(1);
+  }
+  process.stdout.write(`  control returned — lease: ${broker.current}\n\n`);
+
+  const result = await running;
+  logger.writeDocument("result.json", result);
+  logger.writeDocument("intervention.json", interventions.get(request.id));
+  logger.writeDocument("lease-history.json", broker.state());
+  process.stdout.write(`  ${describeResult(result)}\n`);
+  if (result.status === "success") process.stdout.write(`  outputs: ${JSON.stringify(result.outputs)}\n`);
+  process.stdout.write(`  evidence: ${logger.dir}\n`);
+
+  await surface.dispose();
+  await console_.close();
+  await app.close();
+  process.exit(result.status === "success" ? 0 : 1);
 }
 
 handoff.takeControl(request.id, OPERATOR);
