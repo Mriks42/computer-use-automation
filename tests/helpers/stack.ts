@@ -49,6 +49,12 @@ export async function testStack() {
   return {
     origin: app.url,
     surface,
+    /**
+     * The raw adapter, so a test can drive the live page the way a human
+     * operator would — outside the lease, exactly as a person at the keyboard
+     * is outside it.
+     */
+    adapter,
     logger,
     broker,
     interventions,

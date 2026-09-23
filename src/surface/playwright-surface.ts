@@ -52,6 +52,7 @@ export class PlaywrightSurface implements Surface {
     Pick<PlaywrightSurfaceOptions, "app" | "entryPoint">;
   private lastHttpStatus: number | undefined;
   private humanRecordingEnabled = false;
+  private readonly humanActions: RecordedHumanAction[] = [];
 
   constructor(options: PlaywrightSurfaceOptions) {
     this.options = {
@@ -372,22 +373,39 @@ export class PlaywrightSurface implements Surface {
   /**
    * Install listeners that record operator input during a handoff.
    *
-   * Registered as an init script so it applies to every document the operator
-   * navigates to and to every frame of a frameset, rather than only the one
-   * that happened to be loaded when the handoff began.
+   * Each event is pushed out of the page immediately through an exposed
+   * binding, rather than buffered in a `window` array and collected at the end.
    *
-   * The listeners are passive and capture-phase, so they observe without
-   * interfering with the application's own handlers.
+   * That detail is the whole mechanism. Buffering in the page loses exactly the
+   * actions worth keeping: a click on a link is recorded, then the navigation
+   * that click caused destroys the document and the buffer with it. The only
+   * operator actions that would survive are the ones that changed nothing.
+   * Observed directly — the first version of this recorded zero actions for an
+   * operator whose entire contribution was clicking through to a record.
+   *
+   * Listeners are passive and capture-phase, so they observe without
+   * interfering with the application's own handlers, and are registered as an
+   * init script so they apply to every document the operator reaches and to
+   * every frame of a frameset.
    */
   async beginHumanRecording(): Promise<void> {
     if (this.humanRecordingEnabled) return;
     this.humanRecordingEnabled = true;
 
+    await this.context.exposeBinding(
+      "__cuaRecordHumanAction",
+      (_source, action: RecordedHumanAction) => {
+        this.humanActions.push(action);
+      },
+    );
+
     const installer = () => {
-      const w = window as unknown as { __cuaHumanActions?: unknown[]; __cuaRecorderInstalled?: boolean };
+      const w = window as unknown as {
+        __cuaRecorderInstalled?: boolean;
+        __cuaRecordHumanAction?: (a: Record<string, unknown>) => void;
+      };
       if (w.__cuaRecorderInstalled) return;
       w.__cuaRecorderInstalled = true;
-      w.__cuaHumanActions = w.__cuaHumanActions ?? [];
 
       const describe = (el: Element | null): string => {
         if (!el) return "";
@@ -396,19 +414,28 @@ export class PlaywrightSurface implements Surface {
           el.getAttribute("role") ??
           (tag === "a" ? "link" : tag === "select" ? "combobox" : tag === "button" ? "button" : tag);
         const label =
-          el.getAttribute("aria-label") ??
-          (el as HTMLInputElement).value ??
+          el.getAttribute("aria-label") ||
+          (tag === "input" ? (el.getAttribute("value") ?? "") : "") ||
           (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 60);
         return `${role}:${label}`.slice(0, 120);
       };
 
-      const push = (entry: Record<string, unknown>) => {
-        w.__cuaHumanActions!.push({ at: new Date().toISOString(), location: location.href, ...entry });
+      const send = (entry: Record<string, unknown>) => {
+        try {
+          w.__cuaRecordHumanAction?.({
+            at: new Date().toISOString(),
+            location: location.href,
+            ...entry,
+          });
+        } catch {
+          // The binding is gone mid-teardown. Losing one trailing event is
+          // preferable to throwing inside the application's event handler.
+        }
       };
 
       document.addEventListener(
         "click",
-        (e) => push({ type: "click", target: describe(e.target as Element) }),
+        (e) => send({ type: "click", target: describe(e.target as Element) }),
         true,
       );
       document.addEventListener(
@@ -416,40 +443,28 @@ export class PlaywrightSurface implements Surface {
         (e) => {
           const el = e.target as HTMLInputElement;
           // Length only. The value itself is regulated data we must not keep.
-          push({ type: "change", target: describe(el), valueLength: (el.value ?? "").length });
+          send({ type: "change", target: describe(el), valueLength: (el.value ?? "").length });
         },
         true,
       );
       document.addEventListener(
         "submit",
-        (e) => push({ type: "submit", target: describe(e.target as Element) }),
+        (e) => send({ type: "submit", target: describe(e.target as Element) }),
         true,
       );
     };
 
     await this.context.addInitScript(installer);
-    // Also install into whatever is already loaded, since init scripts only
-    // affect documents created after registration.
+    // Init scripts only affect documents created after registration, so also
+    // install into whatever the operator is looking at right now.
     for (const frame of this.page.frames()) {
       await frame.evaluate(installer).catch(() => {});
     }
   }
 
   async drainHumanActions(): Promise<RecordedHumanAction[]> {
-    const collected: RecordedHumanAction[] = [];
-    for (const frame of this.page.frames()) {
-      try {
-        const actions = await frame.evaluate(() => {
-          const w = window as unknown as { __cuaHumanActions?: unknown[] };
-          const out = w.__cuaHumanActions ?? [];
-          w.__cuaHumanActions = [];
-          return out;
-        });
-        collected.push(...(actions as RecordedHumanAction[]));
-      } catch {
-        // A frame that navigated mid-drain has already discarded its buffer.
-      }
-    }
+    const collected = [...this.humanActions];
+    this.humanActions.length = 0;
     return collected.sort((a, b) => a.at.localeCompare(b.at));
   }
 

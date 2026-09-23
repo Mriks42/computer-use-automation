@@ -51,6 +51,23 @@ This scenario caught two real bugs, both since fixed:
 1. The transient retry re-ran the step against the sign-on page. The strong rungs matched nothing, execution fell through to the positional fallback, and that fallback matched the login form's first textbox and first button — typing a member number into the Operator ID field and clicking Sign On. Replay now refuses to retry into a recognised bad state, and the recorder emits a precondition per step so a step asserts it is on the right screen before acting.
 2. Because of that stray login attempt, the "Your session has expired" message was replaced by "Invalid operator ID or password" before anything was captured — so the failure was misclassified *and* the evidence explaining it was gone. Both are visible in this run as they should now behave.
 
+## `06-escalation-handoff/`
+
+A complete human handoff: automation pauses mid-flow, an operator takes control of **the same live session**, navigates to a screen the replay never reached, hands control back, and the run resumes and completes using the state they left.
+
+The capability here (`member.savings_balance.assisted_read`) is hand-authored rather than discovered, and deliberately so — it carries an `escalate` step as a *designed* decision point: "ask a person which of these records is the right one." A discovery run only produces an escalate step when the model gets stuck, which is the error path, not this one. The mechanism being exercised is identical either way.
+
+The operator's side is scripted (`scripts/demo-handoff.ts`) so the evidence is reproducible from a fresh clone. Nothing about the transfer is stubbed: the intervention, the lease, the live session, the action capture and the resume-and-verify are all real, and the simulated operator acts through the raw browser page from outside the lease, exactly as a person at a keyboard does. Run it yourself with `npm run demo:handoff --headed`, or do it manually with any headed replay plus the console at :4610.
+
+Four things to look for:
+
+- **`lease-history.json`** — `automation → pending_human → human → automation`, with the operator named on the transitions they held. `pending_human` is a distinct state because the gap between automation standing down and a person arriving is real, and during it nobody is driving.
+- **`log.jsonl`, `lease_enforced`** — automation attempted an action while the lease was held for a human and the *surface refused it*. Control transfer is enforced at the only place that matters, not by callers being well behaved.
+- **`intervention.json`** — what the operator was given: capability, version, step, reason, suggested action, the screen text, and a screenshot captured *before* automation stood down. Plus `humanActions`, recording `click → link:10001` — the control they touched, with no value field. Recording what an operator typed into a member record would defeat the whole redaction layer.
+- **`result.json`** — the run completed and read `8241.55` from the record the operator chose. The `s7` step carries a checkpoint, so on resume automation re-observed and asserted it had actually reached the member detail screen rather than taking the operator's word for it.
+
+If control transfer were cosmetic — a fresh session, or a flag nobody enforces — this run could not have finished.
+
 ## `catalog.json`
 
 What an AI agent would discover: name, typed parameters, typed returns, risk class, approval state, and the outcome codes it can expect back. Generated with `npm run catalog`.

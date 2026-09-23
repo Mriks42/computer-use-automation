@@ -15,7 +15,8 @@
     "catalog": "tsx src/cli.ts catalog",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "demo:handoff": "tsx scripts/demo-handoff.ts"
   },
   "dependencies": {
     "commander": "^12.1.0",

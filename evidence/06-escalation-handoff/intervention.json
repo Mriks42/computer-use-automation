@@ -1,0 +1,35 @@
+{
+  "runId": "handoff-2026-09-23T03-47-38-196Z",
+  "kind": "risky_action_confirmation",
+  "capabilityId": "member.savings_balance.assisted_read",
+  "capabilityVersion": "1.0.0",
+  "stepId": "s7_operator_selects_record",
+  "stepIndex": 6,
+  "reason": "Selecting the correct record from search results requires operator judgement.",
+  "detail": "Capability member.savings_balance.assisted_read reached a step that requires a person.",
+  "suggestedAction": "Review the search results in the live session, open the correct member record, then hand control back.",
+  "context": {
+    "location": "http://127.0.0.1:4600/desk",
+    "title": "Meridian Core - Operator Desk",
+    "textExcerpt": "MERIDIAN\nHome\nMember Search\nReports\nSign Off\n\nMember Search Results\n1 record(s) matched \"10001\".\nMember No\tName\tBranch\tStatus\n10001\tWhitfield, Dana\tRiverside\tACTIVE",
+    "signals": [],
+    "screenshotPath": "/Users/mrigankochowdhury/Projects/computer-use-automation/runs/handoff-2026-09-23T03-47-38-196Z/captures/00-escalation-risky_action_confirmation.png"
+  },
+  "id": "int-105eee0f",
+  "createdAt": "2026-09-23T03:47:44.009Z",
+  "status": "resolved",
+  "resolution": {
+    "actor": "operator-jane",
+    "at": "2026-09-23T03:47:44.273Z",
+    "note": "Selected member 10001 from the candidate records.",
+    "decision": "approved",
+    "humanActions": [
+      {
+        "at": "2026-09-23T03:47:44.157Z",
+        "location": "http://127.0.0.1:4600/search/results?q=10001",
+        "type": "click",
+        "target": "link:10001"
+      }
+    ]
+  }
+}

@@ -37,7 +37,7 @@ The other values in `.env.example` have working defaults and can be left alone. 
 Everything except the discovery run works with no API key:
 
 ```bash
-npm test                     # 51 tests, incl. 12 driving a real browser
+npm test                     # 54 tests, incl. 15 driving a real browser
 npm run replay -- --capability member.savings_balance.read --param memberId=10001
 npm run app                  # browse the target app yourself at :4600
 ```
@@ -98,11 +98,13 @@ Any run — discovery or replay — starts an operator console at **http://127.0
 
 When the system cannot safely proceed it pauses, raises an intervention carrying the goal, the step, the screenshot and why it stopped, and releases the session lease. The console shows that context with a **Take control** button. The operator then drives **the same browser window the automation was using** — not a fresh session — and hands control back when done.
 
-To watch it happen, run headed and stop the agent somewhere it cannot proceed:
+To see a full handoff end to end — pause, transfer, operator acts, resume, verify:
 
 ```bash
-npm run discover -- --goal goals/member-savings-balance.json --keep-open
+npm run demo:handoff -- --headed
 ```
+
+The operator's side is scripted so it's reproducible from a clone; everything else is real. Committed output is in [evidence/06-escalation-handoff/](evidence/06-escalation-handoff/). To drive it by hand instead, run any replay headed and use the console.
 
 Control transfer is enforced at the surface: every `act()` checks the lease and throws if automation is not the holder. A stray retry cannot type into a form an operator is mid-way through correcting.
 
@@ -195,4 +197,4 @@ npm test
 npm run typecheck
 ```
 
-39 unit tests over the parts that fail quietly — locator matching, redaction, risk classification, allowlist rules, the control lease. 12 integration tests driving a real Chromium against the real app, covering the claims that only hold against a live surface: deterministic replay, parameterization across different inputs, business outcomes reported as outcomes, interstitial recovery, session-expiry classification, evidence capture, input validation, and the approval gate.
+39 unit tests over the parts that fail quietly — locator matching, redaction, risk classification, allowlist rules, the control lease. 15 integration tests driving a real Chromium against the real app, covering the claims that only hold against a live surface: deterministic replay, parameterization across different inputs, business outcomes reported as outcomes, interstitial recovery, session-expiry classification, evidence capture, input validation, the approval gate, and a full human handoff including lease enforcement and the operator-abort path.

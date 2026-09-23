@@ -1,0 +1,85 @@
+{
+  "runId": "handoff-2026-09-23T03-47-38-196Z",
+  "capabilityId": "member.savings_balance.assisted_read",
+  "capabilityVersion": "1.0.0",
+  "startedAt": "2026-09-23T03:47:38.388Z",
+  "durationMs": 6946,
+  "trace": [
+    {
+      "stepId": "s1_enter_operator_id",
+      "index": 0,
+      "intent": "Enter the operator ID to sign on.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "textbox labelled \"Operator ID\"",
+      "durationMs": 539
+    },
+    {
+      "stepId": "s2_enter_password",
+      "index": 1,
+      "intent": "Enter the operator password to sign on.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "textbox labelled \"Password\"",
+      "durationMs": 518
+    },
+    {
+      "stepId": "s3_sign_on",
+      "index": 2,
+      "intent": "Submit the sign-on form.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "button named \"Sign On\"",
+      "durationMs": 1171
+    },
+    {
+      "stepId": "s4_open_member_search",
+      "index": 3,
+      "intent": "Open the member search screen.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "link named \"Member Search\"",
+      "durationMs": 1183
+    },
+    {
+      "stepId": "s5_enter_member_id",
+      "index": 4,
+      "intent": "Enter the member number supplied by the caller.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "textbox labelled \"Member ID or Last Name\"",
+      "durationMs": 521
+    },
+    {
+      "stepId": "s6_run_search",
+      "index": 5,
+      "intent": "Run the search.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "button named \"Search\"",
+      "durationMs": 1133
+    },
+    {
+      "stepId": "s7_operator_selects_record",
+      "index": 6,
+      "intent": "Ask a human operator to select the correct member record from the search results, then continue from whatever record they opened.",
+      "status": "ok",
+      "durationMs": 806
+    },
+    {
+      "stepId": "s8_read_savings_balance",
+      "index": 7,
+      "intent": "Read the savings balance from the record the operator selected.",
+      "status": "ok",
+      "resolvedRung": 0,
+      "resolvedBy": "cell in row anchored by \"Savings\" at column 2",
+      "durationMs": 513
+    }
+  ],
+  "evidenceDir": "/Users/mrigankochowdhury/Projects/computer-use-automation/runs/handoff-2026-09-23T03-47-38-196Z",
+  "degradedResolutions": 0,
+  "status": "success",
+  "outputs": {
+    "savingsBalance": 8241.55
+  }
+}

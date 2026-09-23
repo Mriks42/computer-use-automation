@@ -122,6 +122,8 @@ The operator console (`:4610`) shows that context and a **Take control** button.
 
 On resume the engine **re-observes and re-asserts** before continuing. The operator may have left the session somewhere other than where they were asked to, and trusting otherwise is how a handoff corrupts a run.
 
+This is demonstrated rather than described: `evidence/06-escalation-handoff/` is a run where automation pauses, an operator opens a record the replay never visited, hands back, and the next step reads a balance that only exists on that screen. If the transfer were cosmetic the run could not finish. Three integration tests cover the same path, including the abort case. Building it surfaced a bug worth recording: the first implementation buffered operator actions in a `window` array, so a click on a link was captured and then destroyed by the navigation that click caused — the only actions that survived were the ones that changed nothing. Events are now pushed out of the page through an exposed binding as they happen.
+
 Deliberately mocked: the console itself. In production the operator is not sitting at the machine running the browser, so the live surface has to reach them — a CDP screencast over a websocket, or a containerised browser with a VNC/WebRTC channel. Both replace this page's "the window is next to you" assumption. Neither changes the control model, which is the part that is genuinely hard and is therefore the part built for real.
 
 ## 6. Safety
