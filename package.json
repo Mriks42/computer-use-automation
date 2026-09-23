@@ -10,7 +10,6 @@
     "app": "tsx src/cli.ts app",
     "discover": "tsx src/cli.ts discover",
     "replay": "tsx src/cli.ts replay",
-    "operator": "tsx src/cli.ts operator",
     "capabilities": "tsx src/cli.ts capabilities",
     "catalog": "tsx src/cli.ts catalog",
     "typecheck": "tsc --noEmit",
