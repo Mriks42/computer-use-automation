@@ -448,9 +448,8 @@
     "state": "draft"
   },
   "stability": {
-    "attempts": 4,
-    "successes": 2,
-    "lastReplayAt": "2026-09-23T03:16:41.810Z",
+    "attempts": 0,
+    "successes": 0,
     "degradedResolutions": 0
   }
 }

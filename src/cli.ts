@@ -304,8 +304,13 @@ program
       });
 
       stack.logger.writeDocument("result.json", result);
+      // A business outcome is a correct run, not a failed one. Counting
+      // "no such member" against stability would make a perfectly reliable
+      // capability look progressively broken the more it is used for lookups
+      // that legitimately miss — measuring the caller's queries rather than
+      // the automation.
       store.recordReplay(capability.id, capability.version, {
-        succeeded: result.status === "success",
+        succeeded: result.status === "success" || result.status === "business_outcome",
         degradedResolutions: result.degradedResolutions,
       });
 
