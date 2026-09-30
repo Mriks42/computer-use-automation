@@ -37,7 +37,7 @@ The other values in `.env.example` have working defaults and can be left alone. 
 Everything except the discovery run works with no API key and no `.env` at all — the bundled app's sign-on credentials are fake and default automatically:
 
 ```bash
-npm test                     # 54 tests, incl. 15 driving a real browser
+npm test                     # 59 tests, incl. 20 driving a real browser
 npm run replay -- --capability member.savings_balance.read --param memberId=10003
 npm run demo:handoff         # full human handoff, end to end
 npm run app                  # browse the target app yourself at :4600
@@ -206,4 +206,4 @@ npm test
 npm run typecheck
 ```
 
-39 unit tests over the parts that fail quietly — locator matching, redaction, risk classification, allowlist rules, the control lease. 15 integration tests driving a real Chromium against the real app, covering the claims that only hold against a live surface: deterministic replay, parameterization across different inputs, business outcomes reported as outcomes, interstitial recovery, session-expiry classification, evidence capture, input validation, the approval gate, and a full human handoff including lease enforcement and the operator-abort path.
+39 unit tests over the parts that fail quietly — locator matching, redaction, risk classification, allowlist rules, the control lease. 20 integration tests driving a real Chromium against the real app, covering the claims that only hold against a live surface: deterministic replay, parameterization across different inputs, business outcomes reported as outcomes, interstitial recovery, session-expiry classification, evidence capture, input validation, the approval gate, a full human handoff including lease enforcement and the operator-abort path, and the irreversible-action path — refused unattended, committed on authorization, refused on rejection.

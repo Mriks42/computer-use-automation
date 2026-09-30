@@ -9,7 +9,7 @@ import { ControlBroker } from "../../src/escalation/lease.js";
 import { RunLogger } from "../../src/evidence/logger.js";
 import { Allowlist } from "../../src/policy/allowlist.js";
 import { Redactor } from "../../src/policy/redact.js";
-import { GuardedSurface } from "../../src/surface/guarded.js";
+import { GuardedSurface, type ConfirmationHandler } from "../../src/surface/guarded.js";
 import { PlaywrightSurface } from "../../src/surface/playwright-surface.js";
 
 let portCursor = 4800;
@@ -20,7 +20,16 @@ let portCursor = 4800;
  * Each test gets its own port and its own app instance so injected faults in
  * one test cannot leak into another.
  */
-export async function testStack() {
+export interface TestStackOptions {
+  /**
+   * Approver for actions above the unattended risk ceiling. Omitted means no
+   * approver is configured, which must refuse — that is the safe default and a
+   * case worth testing on its own.
+   */
+  onConfirmationRequired?: ConfirmationHandler;
+}
+
+export async function testStack(options: TestStackOptions = {}) {
   const port = portCursor++;
   const app = await startMeridian(port);
 
@@ -42,6 +51,7 @@ export async function testStack() {
   const surface = new GuardedSurface(adapter, {
     broker,
     allowlist: new Allowlist(meridianAllowlist(app.url)),
+    onConfirmationRequired: options.onConfirmationRequired,
   });
 
   const handoff = new HandoffCoordinator(broker, surface, interventions, logger, { waitMs: 2_000 });
